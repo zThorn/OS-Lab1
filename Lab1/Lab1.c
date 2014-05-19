@@ -8,14 +8,28 @@
 #include <Windows.h>
 // #include <unisted.h> //Unix Supported Time fxn
 
+
+
+typedef struct Interrupt{ char* test;
+						  int id;
+};
+
+void setupInterruptVectorTable(){
+	struct Interrupt int1 = { "Power Event has occurred.", 0 };
+	struct Interrupt int2 = { "I/O Event has occurred.",1 };
+	struct Interrupt int3 = { "Critical Event has occurred", 2 };
+
+}
+
 int main()
 {
+	setupInterruptVectorTable();
 	int rand_interrupt = 1;
 	int selection = 1;
 	double sleep = 5000;
 	time_t t;
 	time(&t);
-
+	
 
 	srand((unsigned int)t);
 	if (selection == 0){
