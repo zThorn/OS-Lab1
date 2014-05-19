@@ -14,74 +14,69 @@ typedef struct Interrupt{ char* test;
 						  int id;
 };
 
-void setupInterruptVectorTable(){
-	struct Interrupt int1 = { "Power Event has occurred.", 0 };
-	struct Interrupt int2 = { "I/O Event has occurred.",1 };
-	struct Interrupt int3 = { "Critical Event has occurred", 2 };
-
-}
+struct Interrupt IVR[5];
+int rand_interrupt = 1;
+int rand_interrupt_amount = 1;
+double sleep = 5000;
 
 int main()
 {
 	setupInterruptVectorTable();
-	int rand_interrupt = 1;
+
+	
 	int selection = 1;
-	double sleep = 5000;
+	
 	time_t t;
 	time(&t);
 	
 
 	srand((unsigned int)t);
 	if (selection == 0){
-		while (rand_interrupt != 0){
-			switch (rand_interrupt){
-			case 0:
-				printf("System");
-				break;
-
-			case 1:
-
-				printf("Interrupt successfully processed, CPU resuming processing ");
-				break;
-
-			case 2:
-
-				break;
-			case 3:
-				
-				break;
-			case 4:
-
-				break;
-			case 5:
-
-				break;
-			default:
-				printf("Stan");
-
-
-
-			}
-			rand_interrupt = rand() % 10;
-		}
+		vector_table_interrupt();
 	}
 
 	else if (selection == 1){
-		printf("Checking for interrutps....");
-
-		switch (rand_interrupt){
-
-
-
-
-
-		}
-		rand_interrupt = rand() % 10;
-		printf("Sleeping for %f ms", sleep);
-		Sleep((DWORD) sleep);
-
-
+		polling_interrupt();
 	}
 
 	return 0;
+}
+
+void setupInterruptVectorTable(){
+	struct Interrupt int1 = { "Power Event has occurred.", 0 };
+	struct Interrupt int2 = { "I/O Event has occurred.", 1 };
+	struct Interrupt int3 = { "Critical Event has occurred", 2 };
+	struct Interrupt int4 = { "Exit Event has occurred", 3 };
+	struct Interrupt int5 = { "Generic Event has occurred", 4 };
+	IVR[0] = int1;
+	IVR[1] = int2;
+	IVR[2] = int3;
+	IVR[3] = int4;
+	IVR[4] = int5;
+}
+
+void vector_table_interrupt(){
+	while (rand_interrupt != 9){
+		if (rand_interrupt <= 4){
+			printf("%s \n", IVR[rand_interrupt].test);
+			printf("Interrupt successfully processed, CPU resuming processing \n ");
+		}
+		rand_interrupt = rand() % 10;
+	}
+}
+
+void polling_interrupt(){
+	printf("Checking if an interrupt has occurred...");
+	rand_interrupt_amount = rand() % 5;
+	printf("%i interrupt(s) found!", rand_interrupt_amount);
+
+	if (rand_interrupt <= 4 && rand_interrupt_amount > 0){
+		for (int i = 0; i < rand_interrupt_amount; i++){
+			rand_interrupt = rand() % 4;
+			printf("%s \n", IVR[rand_interrupt].test);
+			printf("Interrupt successfully processed, CPU resuming processing \n ");
+		}
+	}
+	printf("Sleeping for %f ms", sleep);
+	Sleep((DWORD) sleep);
 }
