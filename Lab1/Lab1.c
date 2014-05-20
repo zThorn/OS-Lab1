@@ -1,5 +1,7 @@
-// Lab1.cpp : Defines the entry point for the console application.
-//
+// Lab1.cpp
+// Zach Thornton
+//5/19/2014
+//Simulating Polling interrupts as well as Interrupt vector
 
 #include "stdafx.h"
 #include <stdio.h>
@@ -31,11 +33,16 @@ void setupInterruptVectorTable(){
 }
 
 void vector_table_interrupt(){
+	printf("I am going to simulate a random amount of interrupts... \n");
 	while (rand_interrupt != 9){
 		if (rand_interrupt <= 4){
 			printf("%s \n", IVR[rand_interrupt].interrupt_desc);
 			printf("Interrupt successfully processed, CPU resuming processing \n ");
 			Sleep(200);	//Used to slow down processing, so interrupts appear to occur in realtime
+		}
+		else{
+			printf("CPU processing...\n ");
+			Sleep(200);
 		}
 		rand_interrupt = rand() % 10;
 	}
@@ -45,9 +52,9 @@ void polling_interrupt(){
 	printf("This will simulate 3 polling cycles \n");
 
 	for (int i = 0; i < 3; i++){
-		printf("Checking if an interrupt has occurred...");
+		printf("Checking if an interrupt has occurred...\n");
 		rand_interrupt_amount = rand() % 5;
-		printf("%i interrupt(s) found!", rand_interrupt_amount);
+		printf("%i interrupt(s) found! \n", rand_interrupt_amount);
 
 		if (rand_interrupt <= 4 && rand_interrupt_amount > 0){
 			for (int i = 0; i < rand_interrupt_amount; i++){
@@ -64,13 +71,16 @@ void polling_interrupt(){
 int main()
 {
 	int selection = -1;
+
+	//Used to seed random # generator
 	time_t t;
 	time(&t);
 	srand((unsigned int) t);
+
 	setupInterruptVectorTable();
 
 	while (selection != 1 && selection != 0){
-		printf("Please press 0 to simulate Vector table interrupts, or 1 to simulate polling \n");
+		printf("Please press 0 to simulate vector table interrupts, or 1 to simulate polling \n");
 		scanf_s("%d", &selection);
 
 		if (selection > 1 || selection < 0)
@@ -81,7 +91,7 @@ int main()
 		vector_table_interrupt();
 	}	
 	else if (selection == 1){
-			polling_interrupt();
+		polling_interrupt();
 		}
 	return 0;
 }
